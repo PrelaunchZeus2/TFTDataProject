@@ -7,7 +7,7 @@ def load_json(file_path):
 
 def scrape_units(data):
     units = []
-    for i in range(0,8):
+    for i in range(0,13):
         for champ in data['setData'][i]['champions']:
             api_name = champ.get('apiName', 'Unknown')
             unit_name = api_name.split('_')[1]
@@ -39,8 +39,8 @@ def save_to_csv(units, file_path):
             })
 
 def main():
-    json_file_path = 'units_en_us.json'
-    csv_file_path = 'units.csv'
+    json_file_path = r'data\units_en_us.json'
+    csv_file_path = r'data\units.csv'
     data = load_json(json_file_path)
     units = scrape_units(data)
     save_to_csv(units, csv_file_path)
