@@ -2,9 +2,9 @@ import requests, json, pandas as pd
 
 base_url = "https://americas.api.riotgames.com/"
 
-API_KEY = "RGAPI-07f8e267-81f6-4c46-a839-0043d799becf" #Its expired L scrapers
+API_KEY = "RGAPI-fcdceb6f-ef17-48fe-8849-c5465527ddcd" #Its expired L scrapers
 
-LUNALUSHPUUID = ""
+LUNALUSHPUUID = "zFV662s0sKxQ_vy1ItsTNKV3vl-iFUo92BUFaG18EPGy57qVZaQrmnCYl7a5Sd-CS1ghhIdLPYQ1dw"
 
 def get_account_puuid(summoner_name, tagline):
     puuid = 'NA'
@@ -78,6 +78,8 @@ def main():
             # Get rank
             rank = get_player_rank(summoner_id)
             print(f"Rank: {rank}")
+            
+    
 
 if __name__ == "__main__":
     main()
