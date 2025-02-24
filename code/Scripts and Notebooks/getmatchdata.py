@@ -2,7 +2,8 @@ import requests, json, pandas as pd
 
 base_url = "https://americas.api.riotgames.com/"
 
-API_KEY = "RGAPI-fcdceb6f-ef17-48fe-8849-c5465527ddcd" #Its expired L scrapers
+import os
+
 
 LUNALUSHPUUID = "zFV662s0sKxQ_vy1ItsTNKV3vl-iFUo92BUFaG18EPGy57qVZaQrmnCYl7a5Sd-CS1ghhIdLPYQ1dw"
 
