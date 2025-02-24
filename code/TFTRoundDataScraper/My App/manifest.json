@@ -10,7 +10,9 @@
 		"icon_gray":"IconMouseNormal.png",
 		"description":"This app collects your tft unit data on a round by round basis(I.e. unit positions, item slams, traits active, etc.)"
 	},
+    "permissions": ["Streaming","Hotkeys","GameInfo"],
 	"data": {
+        "game_targeting": {"type": "dedicated","game_ids": [54261]},
 		"start_window":"MainWindow",
 		"windows":{
 			"MainWindow":{
