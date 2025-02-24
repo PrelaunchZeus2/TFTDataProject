@@ -1,0 +1,16 @@
+{
+  "name": "overwolf-lol-tft-app",
+  "version": "1.0.0",
+  "description": "An Overwolf app for tracking League of Legends TFT game data.",
+  "main": "src/main.ts",
+  "scripts": {
+    "start": "overwolf-sdk start",
+    "build": "overwolf-sdk build"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "ts-loader": "^8.0.0"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}
