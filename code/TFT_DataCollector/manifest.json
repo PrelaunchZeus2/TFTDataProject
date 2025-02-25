@@ -6,8 +6,8 @@
     "version": "1.0.0",
     "minimum-overwolf-version": "0.170.0",
     "author": "PrelaunchZeus2",
-    "icon": "icon.png",
-    "icon_gray": "icon_gray.png",
+    "icon": "images/Icon.png",
+    "icon_gray": "images/Icon_grey.png",
     "description": "An app to record TFT game data and save it to a CSV file."
   },
   "permissions": [
