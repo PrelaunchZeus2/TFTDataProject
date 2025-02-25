@@ -1,6 +1,14 @@
 import DataRecorder from './utils/dataRecorder';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const dataRecorder = new DataRecorder('game_data.csv');
+
+// Ensure the directory exists
+const dataDir = path.dirname('game_data.csv');
+if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true });
+}
 
 function onNewEvents(events) {
     // Process new events and update gameData
@@ -40,10 +48,20 @@ function saveGameData() {
     dataRecorder.saveData();
 }
 
+function updateStatus(message) {
+    const statusElement = document.getElementById('status');
+    if (statusElement) {
+        statusElement.textContent = message;
+    }
+}
+
 overwolf.games.events.onNewEvents.addListener(onNewEvents);
 overwolf.games.events.onInfoUpdates2.addListener(onInfoUpdates);
 overwolf.games.onGameInfoUpdated.addListener((info) => {
     if (info && info.gameInfo && info.gameInfo.id === 5426 && !info.gameInfo.isRunning) {
         saveGameData();
+        updateStatus('Logging has stopped.');
+    } else if (info && info.gameInfo && info.gameInfo.id === 5426 && info.gameInfo.isRunning) {
+        updateStatus('Logging is starting...');
     }
 });
