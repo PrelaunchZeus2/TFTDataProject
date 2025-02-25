@@ -27,7 +27,11 @@
         "file": "src/index.html",
         "native_window": true,
         "resizable": true,
-        "show_in_taskbar": true
+        "show_in_taskbar": true,
+        "size": {
+          "width": 800,
+          "height": 600
+        }
       },
       "logWindow": {
         "file": "src/logWindow.html",
@@ -35,8 +39,8 @@
         "resizable": true,
         "show_in_taskbar": true,
         "size": {
-          "width": 400,
-          "height": 500
+          "width": 800,
+          "height": 600
         }
       }
     }
