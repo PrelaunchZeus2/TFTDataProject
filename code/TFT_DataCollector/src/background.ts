@@ -55,6 +55,20 @@ function updateStatus(message) {
     }
 }
 
+function openLogWindow() {
+    overwolf.windows.obtainDeclaredWindow("logWindow", (result) => {
+        if (result.success) {
+            overwolf.windows.restore(result.window.id, (restoreResult) => {
+                if (!restoreResult.success) {
+                    console.error("Failed to restore log window:", restoreResult.error);
+                }
+            });
+        } else {
+            console.error("Failed to obtain log window:", result.error);
+        }
+    });
+}
+
 overwolf.games.events.onNewEvents.addListener(onNewEvents);
 overwolf.games.events.onInfoUpdates2.addListener(onInfoUpdates);
 overwolf.games.onGameInfoUpdated.addListener((info) => {
@@ -63,5 +77,6 @@ overwolf.games.onGameInfoUpdated.addListener((info) => {
         updateStatus('Logging has stopped.');
     } else if (info && info.gameInfo && info.gameInfo.id === 5426 && info.gameInfo.isRunning) {
         updateStatus('Logging is starting...');
+        openLogWindow();
     }
 });
