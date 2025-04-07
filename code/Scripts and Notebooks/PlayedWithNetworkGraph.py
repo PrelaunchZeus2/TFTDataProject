@@ -101,6 +101,18 @@ def create_network_graph(center_name, participants):
         G.add_node(name, size=1000 + count * 100, color='blue')
         G.add_edge(center_name, name, weight=count)
 
+    # Count co-occurrences between participants
+    co_occurrence_counts = Counter()
+    for i, player1 in enumerate(participants):
+        for player2 in participants[i + 1:]:
+            if player1 != player2:
+                co_occurrence_counts[(player1, player2)] += 1
+
+    # Add edges between participants based on co-occurrence counts
+    for (player1, player2), count in co_occurrence_counts.items():
+        if not G.has_edge(player1, player2):
+            G.add_edge(player1, player2, weight=count)
+
     # Draw the graph
     pos = nx.spring_layout(G)
     sizes = [G.nodes[node]['size'] for node in G.nodes]
@@ -109,7 +121,7 @@ def create_network_graph(center_name, participants):
 
     nx.draw(
         G, pos, with_labels=True, node_size=sizes, node_color=colors,
-        width=[weight * 0.5 for weight in weights], edge_color=weights, edge_cmap=plt.cm.Blues
+        width=[weight * 0.8 for weight in weights], edge_color=weights, edge_cmap=plt.cm.Blues
     )
     plt.show()
 
