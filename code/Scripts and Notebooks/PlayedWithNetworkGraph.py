@@ -106,6 +106,10 @@ def create_network_graph(center_name, participants):
         G.add_node(name, size=1000 + count * 100, color='blue')
         G.add_edge(center_name, name, weight=count)
 
+    # Remove edges connecting the center node to itself
+    edges_to_remove = [(u, v) for u, v in G.edges if u == v or v == center_name]
+    G.remove_edges_from(edges_to_remove)
+
     # Count co-occurrences between participants
     co_occurrence_counts = Counter()
     for i, player1 in enumerate(participants):
