@@ -1,0 +1,70 @@
+{
+  "manifest_version": 1,
+  "type": "WebApp",
+  "meta": {
+    "name": "TFTSPY",
+    "version": "1.0.0",
+    "minimum-overwolf-version": "0.170",
+    "author": "PrelaunchZeus2",
+    "description": "An Overwolf app that tracks League of Legends Team Fight Tactics game data.",
+    "icon": "assets/tftspy.png",
+    "hotkeys": {
+      "showhide": {
+        "title": "Show/Hide App",
+        "action-type": "toggle",
+        "default": "Ctrl+F"
+      }
+    }
+  },
+  "permissions": [
+    "GameEvents",
+    "FileSystem"
+  ],
+  "data": {
+    "start_window": "welcome",
+    "game_targeting": {
+      "game_ids": [5426]
+    }
+  },
+  "background": {
+    "scripts": [
+      "src/main.ts"
+    ]
+  },
+  "windows": {
+    "welcome": {
+      "file": "src/welcome/WelcomeWindow.html",
+      "native_window": true,
+      "transparent": false,
+      "resizable": false,
+      "show_in_taskbar": true,
+      "size": {
+        "width": 400,
+        "height": 300
+      }
+    },
+    "ingame": {
+      "file": "src/ingame/IngameWindow.html",
+      "native_window": true,
+      "transparent": false,
+      "resizable": false,
+      "show_in_taskbar": false,
+      "size": {
+        "width": 600,
+        "height": 400
+      }
+    }
+  },
+  "launch_events": [
+    {
+      "event": "GameLaunch",
+      "start_minimized": false,
+      "start_window": "welcome"
+    },
+    {
+      "event": "GameEvent",
+      "start_minimized": false,
+      "start_window": "ingame"
+    }
+  ]
+}

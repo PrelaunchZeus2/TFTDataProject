@@ -1,97 +1,61 @@
-**IMPORTANT: In order to use install this app, you need to be Whitelisted as a developer!
-(https://overwolf.github.io/docs/start/sdk-introduction#get-whitelisted-as-a-developer)**
+# Overwolf League of Legends Team Fight Tactics Tracker
 
-# Sample - TS
-Example-ts is an example app, meant to be used as a reference for developers who are new to Overwolf.
-The app is meant to demonstrate some basic points and flows that are relevant when developing Overwolf apps:
+This project is an Overwolf app designed to track and log player information in League of Legends Team Fight Tactics (TFT). The app provides a user-friendly interface to select a file path for saving game data and transitions to an in-game log window that displays real-time information about the player's units, items, positions, and more.
 
-- Auto-launch when a game starts.
-- Register to the overwolf.games.events API and receive real time events from the game.
-- Define a custom hotkey to be used in-game.
-- Communicate between the app windows according to our best practices.
+## Features
 
+- Welcome window with a file path selection button.
+- Real-time tracking of player units, items, and positions during gameplay.
+- Logging of game data to a CSV file at the user-defined path.
+- User-friendly interface for both the welcome and in-game windows.
 
-## Setting up
-In order to run the app, you must first complete several steps:
-1. Download and install [NodeJS](https://nodejs.org/).
-After installing, run the following commands in a terminal of your choice:
+## Project Structure
+
 ```
-node -v
-npm -v
-```
-If they run successfully, proceed to the next steps.
-
-2. Download and install the [Overwolf desktop client](https://download.overwolf.com/install/Download).
-
-3. Download the repository as a zip file and extract it.
-
-4. In your terminal, run the following commands:
-```
-cd <insert path to your extracted 'ts' folder here>
-npm install
-npm run build
-```
-
-5. Open the Overwolf desktop client settings (by right-clicking the client and selecting
-"Support" or by clicking on the wrench icon in the dock and going to the "Support" tab).
-
-6. Click on "Development options".
-
-7. In the opened window, click on "Load unpacked extension" and select the `ts/dist/` folder.
-This will add the app to your dock.
-
-8. Click on the app's icon in your dock.
-
-## Building an .opk for distribution
-When you run run ```npm run build``` in your terminal, an .opk is created in releases/ directory
-
-## Changing the version number quickly
-We have included a webpack plugin that can change the .opk version quickly with just a command line argument. Simply add ```--env setVersion=1.0.1``` to your build command.
-Example:
-```
-npm run build --env setVersion=1.0.1
+overwolf-app
+├── src
+│   ├── main.ts                # Entry point of the application
+│   ├── welcome
+│   │   ├── WelcomeWindow.ts   # Manages the welcome interface
+│   │   └── WelcomeWindow.html  # HTML structure for the welcome window
+│   ├── ingame
+│   │   ├── IngameWindow.ts     # Manages the in-game log interface
+│   │   └── IngameWindow.html    # HTML structure for the in-game log window
+│   ├── utils
+│   │   └── FileHandler.ts      # Utility for saving game data to CSV
+│   └── types
+│       └── index.ts           # Defines data structures used in the app
+├── package.json                # npm configuration file
+├── tsconfig.json               # TypeScript configuration file
+├── overwolf-manifest.json      # Manifest for the Overwolf app
+└── README.md                   # Project documentation
 ```
 
-This will change the app version both in package.json and app's manifest.json
+## Setup Instructions
 
-## What will you find inside?
+1. Clone the repository to your local machine.
+2. Navigate to the project directory.
+3. Install the necessary dependencies using npm:
+   ```
+   npm install
+   ```
+4. Build the project using TypeScript:
+   ```
+   npm run build
+   ```
+5. Load the app in Overwolf by following the Overwolf app development guidelines.
 
-### public/
-All of the static resources used by the app, like icons, images and CSS
+## Usage
 
-##### public/manifest.json
-This file defines all of the aspects of the app.
-Read all about Overwolf's manifest.json mechanism [here](https://overwolf.github.io/docs/api/manifest-json#welcome-to-the-manifestjson-file).
-In our manifest.json file, we have [```{ "start_window": "background" }```](https://overwolf.github.io/docs/api/manifest-json#start_window) defined.
-This sets our [background](###windows/background) window as the app's starting point.
-All of this app's windows' properties can be found under the [```windows```](https://overwolf.github.io/docs/api/manifest-json#window-data) object.
-Please refer to the [dev site](https://overwolf.github.io/docs/api/manifest-json#welcome-to-the-manifestjson-file) to learn more about each property.
+- Launch the app to open the welcome window.
+- Click the "Select File Path" button to choose where to save the game data.
+- Start a game of League of Legends Team Fight Tactics.
+- The app will automatically switch to the in-game log window and begin tracking player information.
 
-#### src/
-Source .html & .ts files for the app
+## Contributing
 
-##### src/background/
-This directory contains files of the background window, which serves as the application's starting point and window orchestrator.
-The window's ```run()``` method detects whether a a supported game is currently running, decides which window to launch accordingly, and listens for changes.
+Contributions are welcome! Please feel free to submit a pull request or open an issue for any enhancements or bug fixes.
 
-The background window has no visual representation, which can be gleaned from the empty background.html file or from the
-[```{ is_background_page: true }```](https://overwolf.github.io/docs/api/manifest-json#is_background_page)
-property the background window has in our manifest.json.
+## License
 
-##### src/in_game/
-The in_game window listens to [Info Events](https://overwolf.github.io/docs/api/overwolf-games-events#oninfoupdates2) and
-[Game Events](https://overwolf.github.io/docs/api/overwolf-games-events#onnewevents) emitted by the game and
-displays an ad. Furthermore, it defines the behavior for the show/hide hotkey.
-Read all about hotkeys [here](https://overwolf.github.io/docs/topics/hotkeys-best-practices).
-
-##### src/desktop/
-This window serves a purely visual purpose and has no special logic.
-
-##### src/AppWindow.js
-This is a base class that holds the logic shared by the in_game and desktop windows, such as minimize/close, drag, etc.
-
-
-## Notes
-Editing the author or app name in the manifest will prevent loading the app as an unpacked app.
-
-For any further information or questions, contact developers@overwolf.com
+This project is licensed under the MIT License. See the LICENSE file for more details.
