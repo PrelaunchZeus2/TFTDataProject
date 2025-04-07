@@ -121,7 +121,7 @@ def create_network_graph(center_name, participants):
 
     nx.draw(
         G, pos, with_labels=True, node_size=sizes, node_color=colors,
-        width=[weight * 0.8 for weight in weights], edge_color=weights, edge_cmap=plt.cm.Blues
+        width=[weight * 0.8 for weight in weights], edge_color=weights, edge_cmap=plt.cm.rainbow
     )
     plt.show()
 
@@ -133,7 +133,6 @@ def main():
 
     if summoner_name and tagline:
         puuid = get_account_puuid(summoner_name, tagline)
-        print(f"PUUID: {puuid}")
 
         if num_matches > 0:
             matches = get_tft_match_ids(puuid, num_matches)
