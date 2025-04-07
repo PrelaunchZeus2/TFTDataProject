@@ -74,13 +74,18 @@ def get_match_data(match_id_list):
 @rate_limit(requests_per_second=20, requests_per_two_minutes=100)
 def get_summoner_name_from_puuid(puuid):
     url = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-puuid/{puuid}?api_key={API_KEY}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        return data.get("gameName"), data.get("tagLine")
-    else:
-        print(f"Error fetching summoner name for PUUID {puuid}: {response.status_code}")
-        return None, None
+    while True:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("gameName"), data.get("tagLine")
+        elif response.status_code == 429:
+            retry_after = int(response.headers.get("Retry-After", 1))
+            print(f"Rate limit hit. Retrying after {retry_after} seconds...")
+            time.sleep(retry_after)
+        else:
+            print(f"Error fetching summoner name for PUUID {puuid}: {response.status_code}")
+            return None, None
 
 def create_network_graph(center_name, participants):
     # Count occurrences of each participant
