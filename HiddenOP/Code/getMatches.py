@@ -41,10 +41,12 @@ def getTFTMatches(puuid: str, start: int = 0, count: int = 20):
 def main():
     SummonerName = "LunaLush"
     tagline = "Heyyy"
-    
+    layers = 20 #The number of other players to get 20 matches from.
     
     puuid = getPuuid(SummonerName, tagline)
     print(f"PUUID: {puuid}")
+    
+    
     
 if __name__ == "__main__":
     main()
