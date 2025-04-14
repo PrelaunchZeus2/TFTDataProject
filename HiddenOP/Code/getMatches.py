@@ -58,6 +58,7 @@ def coreLoop(puuid: str, layers: int = 20):
             match = getMatchData(match_id)
             match_data_list.append(match)
             random_match = random.choice(matches)
+            loop_puuid = random.choice(match["info"]["participants"]["puuid"])
             # in random match extract the players, filter out the starting username, then get the other puuids
             #pick a random players puuid
             #set loop_puuid to that puuid
