@@ -101,7 +101,9 @@ def coreLoop(puuid: str, layers: int = 20):
     return match_data_list
 
 def extract_information(match_jsons):
-    match_info = {}
+    for match in match_jsons:
+        match_id = None
+        
         
 def main():
     starting_player = input("Please enter the account name and tagline of the player to start with, (format: Name#Tagline): ")
