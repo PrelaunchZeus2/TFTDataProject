@@ -1,5 +1,7 @@
-import requests, os, json, random
+import requests, os, json, random, time
 import pandas as pd #maybe try polars later
+
+SLEEP_TIME = 30
 
 try:
     with open("API_KEY.txt", "r") as f:
@@ -13,17 +15,22 @@ except FileNotFoundError:
 
 def getPuuid(name: str, tagline: str):
     """
-    This function retrieves the puuid of a player using their in game name and tagline.
+    This function retrieves the puuid of a player using their in-game name and tagline.
     """
     url = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagline}?api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
-        puuid = json.loads(request.content)["puuid"]
-        return puuid
+        return json.loads(request.content)["puuid"]
+    elif request.status_code == 429:
+        print("Rate limit exceeded. Waiting...")
+        for remaining in range(SLEEP_TIME, 0, -1):
+            print(f"Retrying in {remaining} seconds...", end="\r")
+            time.sleep(1)
+        return getPuuid(name, tagline)
     else:
         print(f"Error Getting Puuid: {request.status_code}")
         return None
-    
+
 def getTFTMatches(puuid: str, start: int = 0, count: int = 20):
     """
     This function retrieves the TFT matches of a player using their puuid.
@@ -31,23 +38,35 @@ def getTFTMatches(puuid: str, start: int = 0, count: int = 20):
     url = f"https://americas.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids?start={start}&count={count}&api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
-        matches = json.loads(request.content)
-        return matches
+        return json.loads(request.content)
+    elif request.status_code == 429:
+        print("Rate limit exceeded. Waiting...")
+        for remaining in range(SLEEP_TIME, 0, -1):
+            print(f"Retrying in {remaining} seconds...", end="\r")
+            time.sleep(1)
+        return getTFTMatches(puuid, start, count)
     else:
         print(f"Error Getting Match List: {request.status_code}")
         return None
-    
+
 def getMatchData(match_id: str):
-    """This function gets the match data for a specific match id."""
+    """
+    This function gets the match data for a specific match id.
+    """
     url = f"https://americas.api.riotgames.com/tft/match/v1/matches/{match_id}?api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
-        match_data = json.loads(request.content)
-        return match_data
+        return json.loads(request.content)
+    elif request.status_code == 429:
+        print("Rate limit exceeded. Waiting...")
+        for remaining in range(SLEEP_TIME, 0, -1):
+            print(f"Retrying in {remaining} seconds...", end="\r")
+            time.sleep(1)
+        return getMatchData(match_id)
     else:
         print(f"Error Getting Match Data: {request.status_code}")
         return None
-    
+
 def coreLoop(puuid: str, layers: int = 20):
     match_data_list = []
     loop_puuid = puuid
@@ -58,12 +77,9 @@ def coreLoop(puuid: str, layers: int = 20):
         for match_id in matches:
             match = getMatchData(match_id)
             match_data_list.append(match)
-        random_match = random.choice(matches)
-        loop_puuid = random.choice(match[1][3]).strip()
-            # in random match extract the players, filter out the starting username, then get the other puuids
-            #pick a random players puuid
-            #set loop_puuid to that puuid
-            #repeat untill layers is reached
+        random_match = random.choice(match_data_list)
+        participants = random_match.get("metadata", {}).get("participants", [])
+        loop_puuid = random.choice(participants).strip()
     return match_data_list
 
 def extract_information(match_jsons):
@@ -80,7 +96,7 @@ def main():
     match_jsons = coreLoop(starting_puuid, layers)
     print(f"Matches: {match_jsons}") 
     
-    data = extract_information(match_jsons)
+    #data = extract_information(match_jsons)
     
     
     
