@@ -104,18 +104,16 @@ def extract_information(match_jsons):
     match_info = {}
         
 def main():
-    SummonerName = "LunaLush"
-    tagline = "Heyyy"
+    starting_player = input("Please enter the account name and tagline of the player to start with, (format: Name#Tagline): ")
+    SummonerName, tagline = starting_player.split("#")
     layers = 20 #The number of other players to get 20 matches from.
     
     starting_puuid = getPuuid(SummonerName, tagline)
     print(f"PUUID: {starting_puuid}")
    
     match_jsons = coreLoop(starting_puuid, layers)
-    print(f"Matches: {match_jsons}") 
-    with open("matches.json", "w") as f:
-        for match in match_jsons:
-            json.dump(match_jsons, f, indent=4)
+
+    data_set = extract_information(match_jsons)
     
     
     
