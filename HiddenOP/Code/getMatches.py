@@ -17,6 +17,7 @@ def getPuuid(name: str, tagline: str):
     """
     This function retrieves the puuid of a player using their in-game name and tagline.
     """
+    time.sleep(2) #avoid the 2s rate limit
     url = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagline}?api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
@@ -35,6 +36,7 @@ def getTFTMatches(puuid: str, start: int = 0, count: int = 20):
     """
     This function retrieves the TFT matches of a player using their puuid.
     """
+    time.sleep(2) #avoid the 2s rate limit
     url = f"https://americas.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids?start={start}&count={count}&api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
@@ -53,6 +55,7 @@ def getMatchData(match_id: str):
     """
     This function gets the match data for a specific match id.
     """
+    time.sleep(2) #avoid the 2s rate limit
     url = f"https://americas.api.riotgames.com/tft/match/v1/matches/{match_id}?api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
@@ -65,21 +68,38 @@ def getMatchData(match_id: str):
         return getMatchData(match_id)
     else:
         print(f"Error Getting Match Data: {request.status_code}")
-        return None
+        
 
 def coreLoop(puuid: str, layers: int = 20):
+    """
+    This function retrieves matches for a player and iteratively retrieves matches for random players
+    from those matches for the specified number of layers.
+    """
     match_data_list = []
     loop_puuid = puuid
-    i = 0
-    while i < layers:
-        i += 1
-        matches = getTFTMatches(loop_puuid, 0, layers)    
+
+    for _ in range(layers):
+        # Get the last 20 matches for the current player
+        matches = getTFTMatches(loop_puuid, start=0, count=20)
+        if not matches:
+            print("No matches found or an error occurred.")
+            continue
+
+        # Retrieve and append match data for each match
         for match_id in matches:
-            match = getMatchData(match_id)
-            match_data_list.append(match)
+            match_data = getMatchData(match_id)
+            if match_data:
+                match_data_list.append(match_data)
+
+        # Select a random match and a random participant from that match
         random_match = random.choice(match_data_list)
         participants = random_match.get("metadata", {}).get("participants", [])
+        if not participants:
+            print("No participants found in the match.")
+            break
+
         loop_puuid = random.choice(participants).strip()
+
     return match_data_list
 
 def extract_information(match_jsons):
@@ -95,8 +115,7 @@ def main():
    
     match_jsons = coreLoop(starting_puuid, layers)
     print(f"Matches: {match_jsons}") 
-    
-    #data = extract_information(match_jsons)
+    match_jsons.to_csv("matches.csv", index=False)
     
     
     
