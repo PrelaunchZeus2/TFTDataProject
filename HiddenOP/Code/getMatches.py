@@ -17,13 +17,12 @@ def getPuuid(name: str, tagline: str):
     """
     This function retrieves the puuid of a player using their in-game name and tagline.
     """
-    time.sleep(2) #avoid the 2s rate limit
     url = f"https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/{name}/{tagline}?api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
         return json.loads(request.content)["puuid"]
     elif request.status_code == 429:
-        print("Rate limit exceeded. Waiting...")
+        print("Rate limit exceeded while getting account puuid. Waiting...")
         for remaining in range(SLEEP_TIME, 0, -1):
             print(f"Retrying in {remaining} seconds...", end="\r")
             time.sleep(1)
@@ -36,13 +35,12 @@ def getTFTMatches(puuid: str, start: int = 0, count: int = 20):
     """
     This function retrieves the TFT matches of a player using their puuid.
     """
-    time.sleep(2) #avoid the 2s rate limit
     url = f"https://americas.api.riotgames.com/tft/match/v1/matches/by-puuid/{puuid}/ids?start={start}&count={count}&api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
         return json.loads(request.content)
     elif request.status_code == 429:
-        print("Rate limit exceeded. Waiting...")
+        print("Rate limit exceeded while getting match list. Waiting...")
         for remaining in range(SLEEP_TIME, 0, -1):
             print(f"Retrying in {remaining} seconds...", end="\r")
             time.sleep(1)
@@ -55,13 +53,12 @@ def getMatchData(match_id: str):
     """
     This function gets the match data for a specific match id.
     """
-    time.sleep(2) #avoid the 2s rate limit
     url = f"https://americas.api.riotgames.com/tft/match/v1/matches/{match_id}?api_key={API_KEY}"
     request = requests.get(url)
     if request.status_code == 200:
         return json.loads(request.content)
     elif request.status_code == 429:
-        print("Rate limit exceeded. Waiting...")
+        print("Rate limit exceeded while getting match data. Waiting...")
         for remaining in range(SLEEP_TIME, 0, -1):
             print(f"Retrying in {remaining} seconds...", end="\r")
             time.sleep(1)
@@ -99,6 +96,7 @@ def coreLoop(puuid: str, layers: int = 20):
             break
 
         loop_puuid = random.choice(participants).strip()
+        print("Layers left:", layers - _ - 1, end = "\r")
 
     return match_data_list
 
@@ -115,7 +113,9 @@ def main():
    
     match_jsons = coreLoop(starting_puuid, layers)
     print(f"Matches: {match_jsons}") 
-    match_jsons.to_csv("matches.csv", index=False)
+    with open("matches.json", "w") as f:
+        for match in match_jsons:
+            json.dump(match_jsons, f, indent=4)
     
     
     
