@@ -51,20 +51,23 @@ def getMatchData(match_id: str):
 def coreLoop(puuid: str, layers: int = 20):
     match_data_list = []
     loop_puuid = puuid
-    while i > layers:
+    i = 0
+    while i < layers:
         i += 1
         matches = getTFTMatches(loop_puuid, 0, layers)    
         for match_id in matches:
             match = getMatchData(match_id)
             match_data_list.append(match)
-            random_match = random.choice(matches)
-            loop_puuid = random.choice(match["info"]["participants"]["puuid"])
+        random_match = random.choice(matches)
+        loop_puuid = random.choice(match[1][3]).strip()
             # in random match extract the players, filter out the starting username, then get the other puuids
             #pick a random players puuid
             #set loop_puuid to that puuid
             #repeat untill layers is reached
     return match_data_list
-        
+
+def extract_information(match_jsons):
+    match_info = {}
         
 def main():
     SummonerName = "LunaLush"
@@ -73,11 +76,11 @@ def main():
     
     starting_puuid = getPuuid(SummonerName, tagline)
     print(f"PUUID: {starting_puuid}")
-    
-    matches = getTFTMatches(starting_puuid, 0, layers)
-    print(f"Matches: {matches}")
    
-   #matches = coreLoop(starting_puuid, layers) 
+    match_jsons = coreLoop(starting_puuid, layers)
+    print(f"Matches: {match_jsons}") 
+    
+    data = extract_information(match_jsons)
     
     
     
