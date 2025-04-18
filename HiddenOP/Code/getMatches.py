@@ -1,7 +1,6 @@
 import requests, os, json, random, time
-import pandas as pd #maybe try polars later
-
-SLEEP_TIME = 30
+import polars as pl  #Trying polars since its supposed to be a bit quicker
+SLEEP_TIME = 120
 
 try:
     with open("API_KEY.txt", "r") as f:
@@ -106,16 +105,25 @@ def extract_information(match_jsons):
         
         
 def main():
-    starting_player = input("Please enter the account name and tagline of the player to start with, (format: Name#Tagline): ")
-    SummonerName, tagline = starting_player.split("#")
-    layers = 20 #The number of other players to get 20 matches from.
+    correct_name = False
+    while not correct_name:
+        starting_player = input("Please enter the account name and tagline of the player to start with, (format: Name#Tagline):\n")
+        try:
+            SummonerName, tagline = starting_player.split("#")
+            correct_name = True  # Exit the loop if the input is valid
+        except ValueError:
+            print("Incorrect format. Please use Name#Tagline.")
+
+    layers = 20  # The number of other players to get 20 matches from.
     
     starting_puuid = getPuuid(SummonerName, tagline)
     print(f"PUUID: {starting_puuid}")
    
     match_jsons = coreLoop(starting_puuid, layers)
 
-    data_set = extract_information(match_jsons)
+    data_frame = extract_information(match_jsons)
+    
+    data_frame.write_csv("../Data/match_data.csv")
     
     
     
